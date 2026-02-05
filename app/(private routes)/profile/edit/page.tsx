@@ -31,7 +31,7 @@ function EditProfilePage() {
                     <div className={css.profileCard}>
                         <h1 className={css.formTitle}>Edit Profile</h1>
 
-                        <Image
+                        <img
                             src={user.avatar}
                             alt="User Avatar"
                             width={120}
