@@ -23,15 +23,31 @@
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
+
 .navigation li a {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 8px 12px;
+
   text-decoration: none;
-  color: white;
-  font-size: 1rem;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
+
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .navigation li a:hover {
-  color: #ddd;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+}
+
+.navigation li a[aria-current='page'] {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #e5e7eb;
 }

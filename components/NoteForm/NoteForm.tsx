@@ -3,7 +3,7 @@
 import css from './NoteForm.module.css';
 import type { NoteTag } from '../../types/note';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createNote } from '../../lib/api';
+import { createNote } from '@/lib/api/clientApi';
 import * as Yup from 'yup';
 import { ChangeEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -30,7 +30,6 @@ const NoteFormSchema = Yup.object().shape({
 
 function NoteForm() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
 
@@ -52,12 +51,15 @@ function NoteForm() {
     }
   };
 
+  const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
-    mutationKey: ['notes'],
     mutationFn: createNote,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes'] });
       clearDraft();
+      queryClient.invalidateQueries({
+        queryKey: ['notes'],
+      });
       router.push(`/notes/filter/${ALL_TAG}`);
     },
   });

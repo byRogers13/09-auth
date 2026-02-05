@@ -2,12 +2,12 @@
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import NoteList from '../../../../components/NoteList/NoteList';
+import NoteList from '@/components/NoteList/NoteList';
 import css from './NotesPage.module.css';
-import { fetchNotes } from '../../../../lib/api';
+import { fetchNotes } from '@/lib/api/clientApi';
 import { useState } from 'react';
-import Pagination from '../../../../components/Pagination/Pagination';
-import SearchBox from '../../../../components/SearchBox/SearchBox';
+import Pagination from '@/components/Pagination/Pagination';
+import SearchBox from '@/components/SearchBox/SearchBox';
 import Link from 'next/link';
 
 interface Props {
@@ -46,7 +46,8 @@ function NotesClient({ tag }: Props) {
                     Create note +
                 </Link>
             </header>
-            {data && data.notes.length > 0 ? (
+            {/* Исправлено: добавлены проверки на существование notes */}
+            {data?.notes && data.notes.length > 0 ? (
                 <NoteList notes={data.notes} />
             ) : (
                 data && <p>Nothing found</p>

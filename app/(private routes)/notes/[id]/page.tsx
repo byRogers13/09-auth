@@ -1,4 +1,3 @@
-import { fetchNoteById } from '@/lib/api';
 import {
   dehydrate,
   HydrationBoundary,
@@ -7,6 +6,7 @@ import {
 import NoteDetailsClient from './NoteDetails.client';
 import { Metadata } from 'next';
 import { BASE_URL } from '@/lib/config/constants';
+import { fetchNoteByIdServer } from '@/lib/api/serverApi';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -14,7 +14,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const note = await fetchNoteById(id);
+  const note = await fetchNoteByIdServer(id);
   const title = `Note: ${note.title}`;
   const description = `${note.content.slice(0, 30)}`;
 
@@ -43,7 +43,7 @@ async function NoteDetails({ params }: Props) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['note', id],
-    queryFn: () => fetchNoteById(id),
+    queryFn: () => fetchNoteByIdServer(id),
   });
 
   return (

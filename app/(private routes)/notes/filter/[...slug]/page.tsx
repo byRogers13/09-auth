@@ -1,4 +1,3 @@
-import { fetchNotes } from '@/lib/api';
 import {
     dehydrate,
     HydrationBoundary,
@@ -7,6 +6,7 @@ import {
 import NotesClient from './Notes.client';
 import { Metadata } from 'next';
 import { ALL_TAG, BASE_URL } from '@/lib/config/constants';
+import { fetchNotesServer } from '@/lib/api/serverApi';
 
 interface Props {
     params: Promise<{ slug: string[] }>;
@@ -40,11 +40,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const NotesByCategory = async ({ params }: Props) => {
     const { slug } = await params;
     const tag = slug[0] === ALL_TAG ? undefined : slug[0];
+    const page = 1;
+    const query = '';
 
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery({
-        queryKey: ['notes', { page: 1, tag }],
-        queryFn: () => fetchNotes('', 1, tag),
+        queryKey: ['notes', query, page, tag],
+        queryFn: () => fetchNotesServer(query, page, tag),
     });
 
     return (

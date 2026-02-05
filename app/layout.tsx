@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-
 import './globals.css';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
 import { BASE_URL } from '@/lib/config/constants';
+import AuthProvider from '@/components/AuthProvider/AuthProvider';
 
 const roboto = Roboto({
   variable: '--roboto',
@@ -15,7 +15,6 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
   title: 'NoteHub',
   description: 'Fast and effortless note organization.',
   openGraph: {
@@ -44,10 +43,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={roboto.variable}>
         <TanStackProvider>
-          <Header />
-          {children}
-          {modal}
-          <Footer />
+          <AuthProvider>
+            <Header />
+            <main>
+              {children}
+              {modal}
+            </main>
+            <Footer />
+          </AuthProvider>
         </TanStackProvider>
       </body>
     </html>
