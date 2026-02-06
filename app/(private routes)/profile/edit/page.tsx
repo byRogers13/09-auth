@@ -23,7 +23,6 @@ function EditProfilePage() {
         }
     };
 
-
     return (
         <>
             {user && (
@@ -31,7 +30,7 @@ function EditProfilePage() {
                     <div className={css.profileCard}>
                         <h1 className={css.formTitle}>Edit Profile</h1>
 
-                        <img
+                        <Image
                             src={user.avatar}
                             alt="User Avatar"
                             width={120}

@@ -12,16 +12,30 @@ export async function proxy(request: NextRequest) {
 
     let isAuthenticated = Boolean(accessToken);
 
+    const response = NextResponse.next();
 
     if (!accessToken && refreshToken) {
         try {
-            await checkSessionServer();
+            const refreshResponse = await checkSessionServer();
+
+            if (refreshResponse.status !== 200) {
+                throw new Error('Refresh failed');
+            }
+
+            const setCookie = refreshResponse.headers['set-cookie'];
+
+            if (setCookie) {
+                response.headers.set(
+                    'set-cookie',
+                    Array.isArray(setCookie) ? setCookie.join(',') : setCookie
+                );
+            }
+
             isAuthenticated = true;
         } catch {
             isAuthenticated = false;
         }
     }
-
 
     if (
         !isAuthenticated &&
@@ -30,7 +44,6 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL('/sign-in', request.url));
     }
 
-
     if (
         isAuthenticated &&
         AUTH_ROUTES.some(route => pathname.startsWith(route))
@@ -38,5 +51,5 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL('/', request.url));
     }
 
-    return NextResponse.next();
+    return response;
 }
